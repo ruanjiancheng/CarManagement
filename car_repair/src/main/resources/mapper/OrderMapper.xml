@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shu.car_repair.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.shu.car_repair.entity.Order">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="commission_id" jdbcType="INTEGER" property="commissionId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.shu.car_repair.entity.Order">
+    <result column="repair_detail" jdbcType="LONGVARCHAR" property="repairDetail" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, order_id, commission_id, status
+  </sql>
+  <sql id="Blob_Column_List">
+    repair_detail
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from orders
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from orders
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.shu.car_repair.entity.Order">
+    insert into orders (id, order_id, commission_id,
+      status, repair_detail)
+    values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=BIGINT}, #{commissionId,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{repairDetail,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.shu.car_repair.entity.Order">
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="commissionId != null">
+        commission_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="repairDetail != null">
+        repair_detail,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="commissionId != null">
+        #{commissionId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="repairDetail != null">
+        #{repairDetail,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shu.car_repair.entity.Order">
+    update orders
+    <set>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="commissionId != null">
+        commission_id = #{commissionId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="repairDetail != null">
+        repair_detail = #{repairDetail,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.shu.car_repair.entity.Order">
+    update orders
+    set order_id = #{orderId,jdbcType=BIGINT},
+      commission_id = #{commissionId,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      repair_detail = #{repairDetail,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.shu.car_repair.entity.Order">
+    update orders
+    set order_id = #{orderId,jdbcType=BIGINT},
+      commission_id = #{commissionId,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getAllOrders" resultType="com.shu.car_repair.entity.Order">
+    select * from orders
+  </select>
+
+  <select id="getOrderByCommID" parameterType="java.lang.Integer" resultType="com.shu.car_repair.entity.Order">
+    select * from orders where commission_id=#{commissionID} limit 1
+  </select>
+
+</mapper>
