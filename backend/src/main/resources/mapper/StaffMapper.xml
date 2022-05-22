@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shu.car_repair.mapper.StaffMapper">
+  <resultMap id="BaseResultMap" type="com.shu.car_repair.entity.Staff">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="staff_id" jdbcType="VARCHAR" property="staffId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="unit_price" jdbcType="INTEGER" property="unitPrice" />
+    <result column="worker_type" jdbcType="TINYINT" property="workerType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, staff_id, name, type, account, password, unit_price, worker_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from staff
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from staff
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.shu.car_repair.entity.Staff">
+    insert into staff (id, staff_id, name, 
+      type, account, password, 
+      unit_price, worker_type)
+    values (#{id,jdbcType=INTEGER}, #{staffId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{type,jdbcType=TINYINT}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{unitPrice,jdbcType=INTEGER}, #{workerType,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.shu.car_repair.entity.Staff">
+    insert into staff
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="staffId != null">
+        staff_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="unitPrice != null">
+        unit_price,
+      </if>
+      <if test="workerType != null">
+        worker_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="staffId != null">
+        #{staffId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="unitPrice != null">
+        #{unitPrice,jdbcType=INTEGER},
+      </if>
+      <if test="workerType != null">
+        #{workerType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.shu.car_repair.entity.Staff">
+    update staff
+    <set>
+      <if test="staffId != null">
+        staff_id = #{staffId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="unitPrice != null">
+        unit_price = #{unitPrice,jdbcType=INTEGER},
+      </if>
+      <if test="workerType != null">
+        worker_type = #{workerType,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.shu.car_repair.entity.Staff">
+    update staff
+    set staff_id = #{staffId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=TINYINT},
+      account = #{account,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      unit_price = #{unitPrice,jdbcType=INTEGER},
+      worker_type = #{workerType,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getAllStaff" resultType="com.shu.car_repair.entity.Staff">
+    select * from staff
+  </select>
+
+  <select id="getAllBizMen" resultType="com.shu.car_repair.entity.Staff">
+    select * from staff where type=0
+  </select>
+
+  <select id="getAllWorkers" resultType="com.shu.car_repair.entity.Staff">
+    select * from staff where type=1
+  </select>
+
+  <select id="getPasswordByUsername" parameterType="java.lang.String" resultType="com.shu.car_repair.entity.Staff">
+    select * from staff where account=#{username} limit 1
+  </select>
+  
+  <select id="queryWorkerByPrice" parameterType="com.shu.car_repair.dto.QueryStaffDto" resultType="com.shu.car_repair.entity.Staff">
+    select * from staff where type='1'
+    <if test="null != highPrice">
+      and unit_price &lt;= #{highPrice}
+    </if>
+    <if test="null != lowPrice">
+      and unit_price &gt;= #{lowPrice}
+    </if>
+    <if test="null != name">
+      and name like #{name}
+    </if>
+  </select>
+</mapper>
